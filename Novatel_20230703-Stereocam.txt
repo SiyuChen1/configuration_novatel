@@ -1,0 +1,23 @@
+SETINSTRANSLATION ANT1 0.431 0.0 0.013 0.001 0.001 0.001
+SETINSTRANSLATION ANT2 -0.506 0.0 0.013 0.001 0.001 0.001
+SETINSROTATION RBV 180 0 0
+unlogall
+icomconfig icom5 tcp :2000
+log inspva ontime 1.0  
+log bestposa ontime 1.0 
+log bestutma ontime 0.2  
+log corrimusa ontime 0.1  
+log insattxa ontime 0.1  
+log gpgga ontime 1.0
+log gprmc ontime 1.0
+log gphdt onchanged
+serialconfig com1 115200 N 8 1 N on
+interfacemode com1 rtcmv3 novatel off
+SETINSPROFILE LAND
+ALIGNMENTMODE AUTOMATIC
+rtksource rtcmv3 any
+rtksourcetimeout set 5
+log com1 gpgga ontime 3
+eventoutcontrol mark1 enable positive 50000000 200000000
+saveconfig
+

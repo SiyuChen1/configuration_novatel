@@ -1,0 +1,100 @@
+# online converter
+# https://www.eddmaps.org/tools/latlongconv.cfm
+
+SETINSTRANSLATION ANT1 0.431 0.0 0.013 0.001 0.001 0.001
+SETINSTRANSLATION ANT2 -0.506 0.0 0.013 0.001 0.001 0.001
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1074
+# Use the SETINSTRANSLATION command to specify translational offsets between the IMU frame and other
+# reference frames, including GNSS antennas or the desired output frame.
+# ANT1: Offset from the IMU center of navigation to the phase center of the primary GNSS antenna.
+# ANT2: Offset from the IMU center of navigation to the phase center of the secondary GNSS antenna.
+# X, Y, Z Translation: 0.431 0.0 0.013
+# X, Y, Z Translation Standard Deviation: 0.001 0.001 0.001
+# For the ANT1, ANT2, EXTERNAL and GIMBAL translations, the standard deviation defaults are set to 10% of the translation value (up to a max of 10 metres).
+
+SETINSROTATION RBV 180 0 0
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1071
+# RBV: Rotation from the IMU body frame to the vehicle body frame.
+# X, Y, Z Rotation from IMU origin in degrees: 180, 0, 0
+
+unlogall
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 463
+# Removes all logs from logging control
+
+log corrimusa ontime 0.01
+# output in vehicle body frame
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1098
+# The CORRIMUS log contains the raw IMU data corrected for gravity, the earth’s rotation and estimated sensor errors.
+# logs contains angular rate and acceleration
+
+log insattxa ontime 0.01
+# outputs the attitude (roll, pitch, yaw) with respect to the vehicle body frame or user output frame
+# in the local level frame
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1110
+# problem 1: definition of roll, pitch, yaw is not consistent with the convention
+# problem 2: rotaion oder is not clear, but probably is fixed axes
+
+log insattqsa ontime 0.01
+# outputs the quaternion with respect to the vehicle body frame or user output frame
+# in the local level frame
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1112
+# same as log insattxa ontime 0.01
+# but output is not in roll, pitch, yaw but in quaternion
+
+log bestgnsspos ontime 0.1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1090
+# BESTGNSSPOS always outputs positions at the antenna phase center.
+# This log contains the best available GNSS position (without INS) computed by the receiver.
+# if the system operating in an RTK mode, after 60 second period, the position is the best position computed by the last base station observations.
+# if the system is not operating in an RTK mode, only pseudorange differential solutions
+
+log bestgnssvela ontime 0.1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1092
+# This log contains the best available GNSS velocity information (without INS) computed by the receiver.
+
+log bestposa ontime 0.1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 537
+# On systems with SPAN enabled, this log contains the best available combined GNSS (with or without RTK) and 
+# Inertial Navigation System (INS - if available) position computed by the receiver.
+
+log bestutma ontime 0.1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 549
+# This log contains the best available position computed by the receiver in UTM coordinates
+# UTM: https://en.wikipedia.org/wiki/
+# https://www.dmap.co.uk/utmworld.htm
+
+log bestxyza ontime 0.1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 555
+# This log contains the receiver’s best available position and velocity in ECEF coordinates.
+
+log gpgga ontime 1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 627
+# This log contains time, position and fix related data of the GNSS receiver. See also Table 121: Position recision of NMEA Logs on page 633.
+
+log gprmc ontime 1
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 651
+# https://www.dmap.co.uk/utmworld.htm
+# The position for the GPRMC log is reported in the user selected datum. See the DATUM command on page 133 for more details
+
+log gphdt onchanged
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 646
+# This log contains actual vessel heading in degrees True (from True North)
+
+SETINSPROFILE LAND
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1069
+# https://docs.novatel.com/OEM7/Content/PDFs/CPT7_Installation_Operation_Manual.pdf page 86
+# INS profile for land vehicles
+
+ALIGNMENTMODE AUTOMATIC
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 1029
+# Use this command to set the alignment method used to initialize the SPAN system.
+
+rtksource rtcmv3 any
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 356
+# This command determines what corrections the RTK filter can use. This is useful when the receiver is receiving corrections from multiple base stations.
+
+rtksourcetimeout set 5
+# https://docs.novatel.com/OEM7/Content/PDFs/OEM7_Commands_Logs_Manual.pdf page 357
+# When multiple RTK correction sources are available, this command allows the user to set a time, in seconds,
+# that the receiver will wait before switching to another RTK correction source if corrections from the original
+# source are lost.

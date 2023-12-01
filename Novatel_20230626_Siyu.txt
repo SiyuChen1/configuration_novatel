@@ -1,0 +1,22 @@
+SETINSTRANSLATION ANT1 0.431 0.0 0.013 0.001 0.001 0.001
+SETINSTRANSLATION ANT2 -0.506 0.0 0.013 0.001 0.001 0.001
+SETINSROTATION RBV 180 0 0
+unlogall
+log corrimusa ontime 0.01
+log insattxa ontime 0.01
+log bestgnsspos ontime 0.1
+log bestposa ontime 0.1
+log bestutma ontime 0.1
+log gpgga ontime 1
+log gprmc ontime 1
+log gphdt onchanged
+serialconfig com1 115200 N 8 1 N on
+interfacemode com1 rtcmv3 novatel off
+SETINSPROFILE LAND
+ALIGNMENTMODE AUTOMATIC
+rtksource rtcmv3 any
+rtksourcetimeout set 5
+log com1 gpgga ontime 3
+ethconfig etha auto auto auto auto
+saveconfig
+

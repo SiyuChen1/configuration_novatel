@@ -7,15 +7,10 @@ icomconfig icom5 tcp :2000
 log bestgnssposa ontime 0.1
 log bestgnssvela ontime 0.1
 log bestposa ontime 0.1
-log bestutma ontime 0.1
 log bestvela ontime 0.1
-log bestxyza ontime 0.1
-log gpgga ontime 1
-log gpggalong ontime 1
-log gprmc ontime 1
-log gphdt onchanged
 log insattqsa ontime 0.01
 log corrimusa ontime 0.01
+log rawimua onnew
 NTRIPSOURCETABLE caster.axio-net.eu:2102
 log sourcetablea once
 ntripconfig ncom1 CLIENT V2 caster.axio-net.eu:2102 AX-PED rwthaachen05 D528GM1A ALL
